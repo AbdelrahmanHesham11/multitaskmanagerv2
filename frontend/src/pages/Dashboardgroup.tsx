@@ -211,7 +211,7 @@ function DashboardGroup() {
           >
             ← Back
           </button>
-          <h1 className="app-title">MultiTask Manager - Group Mode</h1>
+          <h1 className="app-title">MultiTask Manager - Group Mode12</h1>
         </div>
         
         {group && (
