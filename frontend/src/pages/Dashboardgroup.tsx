@@ -25,6 +25,16 @@ function DashboardGroup() {
     fetchGroupDetails();
     refreshTasks();
     fetchGroupMembers();
+
+    // Enable real-time updates for group tasks
+    const subscription = supabaseClient
+      .channel('tasks')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks', filter: `group_id=eq.${groupId}` }, refreshTasks)
+      .subscribe();
+
+    return () => {
+      supabaseClient.removeChannel(subscription); // Cleanup on unmount
+    };
   }, [groupId]);
 
   const fetchGroupDetails = async () => {
@@ -224,5 +234,5 @@ function DashboardGroup() {
     </div>
   );
 }
-//TODO better the style in App.css
+
 export default DashboardGroup;
