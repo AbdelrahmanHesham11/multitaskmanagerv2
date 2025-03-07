@@ -1,0 +1,169 @@
+.app-container {
+  @apply flex items-center justify-center min-h-screen bg-gray-900 text-white;
+}
+
+.app-content {
+  @apply w-full max-w-md space-y-6 text-center p-6 bg-gray-800 rounded-lg shadow-lg;
+}
+
+.app-title {
+  @apply text-3xl font-bold text-blue-500;
+}
+
+.app-subtitle {
+  @apply text-blue-300 text-2xl;
+}
+
+/* Ensure the navbar doesn't mess up the layout */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+.app-container {
+  padding-top: 60px; /* Adjust this based on your navbar height */
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Add these styles to your App.css
+
+.group-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.back-button {
+  background-color: #f1f1f1;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.back-button:hover {
+  background-color: #e1e1e1;
+}
+
+.group-info {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.group-name {
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.group-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.invite-button, .clear-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.invite-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.invite-button:hover {
+  background-color: #3e8e41;
+}
+
+.clear-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.clear-button:hover {
+  background-color: #d32f2f;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.loading-spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid #3498db;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.members-section {
+  margin-top: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.members-section h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+.members-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.member-item {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.member-item:last-child {
+  border-bottom: none;
+}
+
+.action-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.action-button:hover {
+  background-color: #2980b9;
+} */
