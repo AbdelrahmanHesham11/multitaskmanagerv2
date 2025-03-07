@@ -15,21 +15,28 @@ function DashboardGroup() {
   const [members, setMembers] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+//update the realtime one!
   useEffect(() => {
     if (!groupId) {
       navigate('/groups');
       return;
     }
-    
+
     fetchGroupDetails();
     refreshTasks();
     fetchGroupMembers();
 
     // Enable real-time updates for group tasks
     const subscription = supabaseClient
-      .channel('tasks')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks', filter: `group_id=eq.${groupId}` }, refreshTasks)
+      .channel(`tasks-realtime-${groupId}`) // Unique per group
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "tasks" },
+        (payload) => {
+          console.log("Task change detected:", payload);
+          refreshTasks(); // Fetch updated tasks
+        }
+      )
       .subscribe();
 
     return () => {
@@ -39,7 +46,7 @@ function DashboardGroup() {
 
   const fetchGroupDetails = async () => {
     if (!groupId) return;
-    
+
     setIsLoading(true);
     try {
       const { data, error } = await supabaseClient
@@ -53,7 +60,7 @@ function DashboardGroup() {
         setError("Couldn't load group details. Please try again.");
         return;
       }
-      
+
       setGroup(data);
     } catch (err) {
       console.error("Error in fetchGroupDetails:", err);
@@ -65,7 +72,7 @@ function DashboardGroup() {
 
   const fetchGroupMembers = async () => {
     if (!groupId) return;
-    
+
     try {
       const { data, error } = await supabaseClient
         .from("group_members")
@@ -76,7 +83,7 @@ function DashboardGroup() {
         console.error("Error fetching group members:", error.message);
         return;
       }
-      
+
       setMembers(data || []);
     } catch (err) {
       console.error("Error in fetchGroupMembers:", err);
@@ -85,7 +92,7 @@ function DashboardGroup() {
 
   const refreshTasks = async () => {
     if (!groupId) return;
-    
+
     setIsLoading(true);
     try {
       const updatedTasks = await getGroupTasks(groupId);
@@ -100,7 +107,7 @@ function DashboardGroup() {
 
   const handleAddTask = async (title: string, description: string = "") => {
     if (!groupId || !title.trim()) return;
-    
+
     try {
       await addGroupTask(title, description, groupId);
       refreshTasks();
@@ -122,7 +129,7 @@ function DashboardGroup() {
 
   const handleClearCompleted = async () => {
     if (!groupId) return;
-    
+
     try {
       await deleteCompletedTasks(groupId);
       refreshTasks();
@@ -134,7 +141,7 @@ function DashboardGroup() {
 
   const copyInviteLink = () => {
     if (!group) return;
-    
+
     const inviteLink = `${window.location.origin}/join-group/${groupId}`;
     navigator.clipboard.writeText(inviteLink)
       .then(() => alert("Invite link copied to clipboard!"))
