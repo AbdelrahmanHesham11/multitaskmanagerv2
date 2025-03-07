@@ -15,7 +15,7 @@ function DashboardGroup() {
   const [members, setMembers] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-//update the realtime one!
+
   useEffect(() => {
     if (!groupId) {
       navigate('/groups');
@@ -26,23 +26,46 @@ function DashboardGroup() {
     refreshTasks();
     fetchGroupMembers();
 
-    // Enable real-time updates for group tasks
+    // Enable real-time updates for group tasks with specific filter for this group updatev2
     const subscription = supabaseClient
-      .channel(`tasks-realtime-${groupId}`) // Unique per group
+      .channel(`tasks-realtime-${groupId}`)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "tasks" },
-        (payload) => {
-          console.log("Task change detected:", payload);
-          refreshTasks(); // Fetch updated tasks
+        { 
+          event: "*", 
+          schema: "public", 
+          table: "tasks", 
+          filter: `group_id=eq.${groupId}` // Add filter for this specific group
+        },
+        (payload: any) => {
+          console.log("Task change detected for group:", payload);
+          
+          // Update tasks state based on the type of change
+          if (payload.eventType === 'INSERT') {
+            setTasks(currentTasks => [...currentTasks, payload.new as Task]);
+          } else if (payload.eventType === 'UPDATE') {
+            setTasks(currentTasks => 
+              currentTasks.map(task => task.id === payload.new.id ? payload.new as Task : task)
+            );
+          } else if (payload.eventType === 'DELETE') {
+            setTasks(currentTasks => 
+              currentTasks.filter(task => task.id !== payload.old.id)
+            );
+          } else {
+            // Fallback: refresh all tasks if we can't handle the update type
+            refreshTasks();
+          }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log("Subscription status:", status);
+      });
 
     return () => {
+      console.log("Cleaning up subscription");
       supabaseClient.removeChannel(subscription); // Cleanup on unmount
     };
-  }, [groupId]);
+  }, [groupId, navigate]);
 
   const fetchGroupDetails = async () => {
     if (!groupId) return;
@@ -110,7 +133,7 @@ function DashboardGroup() {
 
     try {
       await addGroupTask(title, description, groupId);
-      refreshTasks();
+      // Don't need to refresh tasks manually, real-time subscription will handle it
     } catch (err) {
       console.error("Error adding task:", err);
       setError("Failed to add task. Please try again.");
@@ -120,7 +143,7 @@ function DashboardGroup() {
   const handleTaskComplete = async (taskId: string) => {
     try {
       await markTaskAsCompleted(taskId);
-      refreshTasks();
+      // Don't need to refresh tasks manually, real-time subscription will handle it
     } catch (err) {
       console.error("Error completing task:", err);
       setError("Failed to complete task. Please try again.");
@@ -132,6 +155,8 @@ function DashboardGroup() {
 
     try {
       await deleteCompletedTasks(groupId);
+      // Real-time should handle most updates, but this operation might involve multiple
+      // records, so let's still refresh to be safe
       refreshTasks();
     } catch (err) {
       console.error("Error clearing completed tasks:", err);
