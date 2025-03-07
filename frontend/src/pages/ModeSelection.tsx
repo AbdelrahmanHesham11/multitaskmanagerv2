@@ -16,7 +16,7 @@ const ModeSelection: React.FC = () => {
         </button>
         <button
           className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600"
-          onClick={() => navigate("/group-setup")}
+          onClick={() => navigate("/GroupSelection")}
         >
           Group Mode
         </button>
