@@ -82,10 +82,6 @@ function Dashboard() {
     refreshTasks();
   };
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    window.location.href = '/'; // Redirect to home/login page
-  };
 
   return (
     <div className="app-container">
@@ -95,12 +91,7 @@ function Dashboard() {
       <div className="app-content">
         <div className="flex justify-between items-center mb-4">
           <h1 className="app-title">MultiTask Manager</h1>
-          <button
-            onClick={handleSignOut}
-            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm"
-          >
-            Sign Out
-          </button>
+
         </div>
         
         <div className="app-subtitle">

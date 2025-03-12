@@ -63,7 +63,7 @@ const Auth: React.FC = () => {
 
                 if (error) throw error;
                 alert('Logged in successfully!');
-                navigate('/Dashboard');
+                navigate('/modeselection');
             }
         } catch (error: any) {
             setError(error.message);
