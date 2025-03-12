@@ -5,7 +5,7 @@ import { supabase } from "../supabase/supabaseCLient";
 const Navbar = () => {
   const [username, setUsername] = React.useState<string | null>(null);
   const navigate = useNavigate();
-
+//hello!
   React.useEffect(() => {
     const fetchUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
