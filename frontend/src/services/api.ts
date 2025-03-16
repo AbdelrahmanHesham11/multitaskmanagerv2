@@ -225,12 +225,15 @@ export const addGroupTask = async (title: string, description: string, groupId: 
 
 
 /**
- * ✅ Get tasks for a specific group
+ * ✅ Get tasks for a specific group with user information
  */
 export const getGroupTasks = async (groupId: string) => {
   const { data, error } = await supabaseClient
     .from('tasks')
-    .select('*')
+    .select(`
+      *,
+      user_profile:profiles!profiles(username)
+    `)
     .eq('group_id', groupId);
 
   if (error) {
@@ -239,7 +242,6 @@ export const getGroupTasks = async (groupId: string) => {
   }
   return data;
 };
-
 /**
  * ✅ Mark task as completed
  */

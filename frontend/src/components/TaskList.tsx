@@ -1,21 +1,13 @@
 import React from "react";
-import { deleteCompletedTasks } from "../services/api"; // ✅ Import delete function
+import { deleteCompletedTasks } from "../services/api"; 
 
-import { Task } from '../types/types'; // 👈 Correct path to types.ts
+import { Task } from '../types/types'; 
 
-// interface Task {
-//   id: string;
-//   title: string;
-//   description: string;
-//   completed?: boolean;
-//   status: string;
-//   user: string;
-// }
 
 interface TaskListProps {
   tasks: Task[];
   onTaskComplete: (id: string) => void;
-  refreshTasks: () => void; // ✅ Added refreshTasks prop
+  refreshTasks: () => void; // 
 }
 
 export default function TaskList({ tasks, onTaskComplete, refreshTasks }: TaskListProps) {
@@ -23,10 +15,10 @@ export default function TaskList({ tasks, onTaskComplete, refreshTasks }: TaskLi
   const incompleteTasks = tasks.filter((task) => !task.completed);
   const completedTasks = tasks.filter((task) => task.completed);
 
-  // ✅ Handle delete completed tasks
+  
   const handleDeleteCompleted = async () => {
     await deleteCompletedTasks();
-    refreshTasks(); // Reload tasks after deletion
+    refreshTasks(); 
   };
 
   return (

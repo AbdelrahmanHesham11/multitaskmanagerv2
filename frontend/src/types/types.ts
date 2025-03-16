@@ -1,29 +1,39 @@
 // src/types/types.ts
-export interface User {
-    id: string;
-    email?: string; // Make email optional
-    username?: string;
-  }
-  
-  export interface AuthResponse {
-    data: {
-      user: User | null;
-      session: any | null; // Adjust this type if you have a specific Session type
-    };
-    error: Error | null;
-  }
 
-// src/types/types.ts
+
+export interface User {
+  id: string;
+  email?: string; // Email is optional
+  username?: string;
+}
+
+
+export interface AuthResponse {
+  data: {
+    user: User | null;
+    session: any | null; 
+  };
+  error: Error | null;
+}
+
+
 export interface Task {
   id: string;
   title: string;
   description: string;
+  status?: string; 
   completed?: boolean;
-  status?: string; // Optional
-  user?: string;   // Optional
+  group_id?: string; 
+  created_at?: string;
+  user?: string; 
+  profiles?: {
+    username: string;
+  }; 
 }
-// src/types/types.ts
+
 export interface Group {
   id: string;
   name: string;
+  invite_code: string;
+  created_by: string; 
 }

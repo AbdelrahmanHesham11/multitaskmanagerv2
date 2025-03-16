@@ -10,7 +10,7 @@ const ModeSelection: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      setIsAuthenticated(!!user); // Set to true if user exists, false otherwise
+      setIsAuthenticated(!!user);
     };
     checkAuth();
   }, []);
@@ -24,29 +24,19 @@ const ModeSelection: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="mode-selection-page">
       <Navbar />
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-        <h1 className="text-3xl font-bold mb-6">Choose Your Mode</h1>
-        <div className="flex space-x-4">
-          <button
-            className={`px-6 py-3 rounded-lg text-white transition ${
-              isAuthenticated ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-400 cursor-not-allowed"
-            }`}
-            onClick={() => handleModeClick("/dashboard")}
-          >
+      <div className="mode-selection">
+        <h1>Select Mode</h1>
+        <div className="mode-buttons">
+          <button className={`solo ${!isAuthenticated ? "disabled" : ""}`} onClick={() => handleModeClick("/dashboard")}>
             Solo Mode
           </button>
-          <button
-            className={`px-6 py-3 rounded-lg text-white transition ${
-              isAuthenticated ? "bg-green-500 hover:bg-green-600" : "bg-gray-400 cursor-not-allowed"
-            }`}
-            onClick={() => handleModeClick("/GroupSelection")}
-          >
+          <button className={`group ${!isAuthenticated ? "disabled" : ""}`} onClick={() => handleModeClick("/GroupSelection")}>
             Group Mode
           </button>
         </div>
-        {!isAuthenticated && <p className="text-red-500 mt-4">Please sign in to continue.</p>}
+        {!isAuthenticated && <p>Please sign in to continue.</p>}
       </div>
     </div>
   );

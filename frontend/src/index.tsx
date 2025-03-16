@@ -17,7 +17,7 @@ root.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route path="/" element={<Dashboard />} /> {/* Default route */}
+        <Route path="/" element={<ModeSelection />} /> {/* Default route */}
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/Auth" element={<Auth />} />
         <Route path="/ModeSelection" element={<ModeSelection />} />
