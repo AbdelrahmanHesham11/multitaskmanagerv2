@@ -25,7 +25,7 @@ const Auth: React.FC = () => {
 
         try {
             if (isSignUp) {
-                // Sign up with Supabase Auth - store username in metadata
+              
                 const { data, error } = await supabase.auth.signUp({
                     email,
                     password,
@@ -39,15 +39,13 @@ const Auth: React.FC = () => {
                 if (error) throw error;
                 
                 if (data.user) {
-                    // Create a function to insert the profile once the user is authenticated
-                    // This avoids RLS policy issues
+          
                     const { error: functionError } = await supabase.rpc('create_profile_for_user', {
                         user_id: data.user.id,
                         user_email: email,
                         user_name: username
                     });
-                    
-                    // If the RPC function doesn't exist, we'll handle it in the dashboard component
+            
                     if (functionError && !functionError.message.includes("does not exist")) {
                         console.error("Error creating profile:", functionError);
                     }

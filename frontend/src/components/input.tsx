@@ -15,8 +15,8 @@ export default function Input({ onAddTask }: InputProps) {
 
   const handleAddTask = () => {
     if (inputValue.trim()) {
-      onAddTask(inputValue); // Pass the input value to the parent
-      setInputValue(""); // Clear the input after adding
+      onAddTask(inputValue); 
+      setInputValue(""); 
     }
   };
 

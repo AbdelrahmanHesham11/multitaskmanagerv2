@@ -9,14 +9,13 @@ const port = 5000;
 app.use(cors());
 app.use(bodyParser.json());
 
-// 🟢 GET all tasks
+
 app.get('/tasks', async (req, res) => {
     const { data, error } = await supabase.from('tasks').select('*');
     if (error) return res.status(500).json({ error: error.message });
     res.json(data);
 });
 
-// 🟢 POST a new task
 app.post('/tasks', async (req, res) => {
     const { title, description, user } = req.body;
     const { data, error } = await supabase.from('tasks').insert([{ title, description, user }]);
@@ -24,7 +23,7 @@ app.post('/tasks', async (req, res) => {
     res.json(data);
 });
 
-// 🟢 UPDATE task status
+
 app.put('/tasks/:id', async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
@@ -33,7 +32,7 @@ app.put('/tasks/:id', async (req, res) => {
     res.json(data);
 });
 
-// 🟢 DELETE a task
+
 app.delete('/tasks/:id', async (req, res) => {
     const { id } = req.params;
     const { data, error } = await supabase.from('tasks').delete().eq('id', id);
@@ -41,7 +40,6 @@ app.delete('/tasks/:id', async (req, res) => {
     res.json(data);
 });
 
-// ✅ Fix for "Cannot GET /"
 app.get('/', (req, res) => {
     res.send('Server is running! Try visiting /tasks');
 });

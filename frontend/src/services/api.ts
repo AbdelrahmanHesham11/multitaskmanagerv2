@@ -1,13 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import DashboardGroup from '../pages/Dashboardgroup';
-const supabaseUrl = 'https://xozoyskpunqygvaddboc.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhvem95c2twdW5xeWd2YWRkYm9jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDExMTY1NTMsImV4cCI6MjA1NjY5MjU1M30.h6VMizg9xaI342LH9dP-40zrWfgZdTI515JE-Y6g-IU';
+const supabaseUrl = "******;"
+const supabaseKey = "******";
 export const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
-/**
- * ✅ Add a new task (Solo or Group mode)
- */
+
 export const addTask = async (title: string, description: string = '', groupId: string | null = null) => {
   const { data: user, error: userError } = await supabaseClient.auth.getUser();
   if (userError || !user.user) {
@@ -23,9 +19,9 @@ export const addTask = async (title: string, description: string = '', groupId: 
   };
 
   if (groupId) {
-    taskData.group_id = groupId; // Group mode
+    taskData.group_id = groupId; 
   } else {
-    taskData.user = user.user.id; // Solo mode
+    taskData.user = user.user.id; 
   }
 
   const { data, error } = await supabaseClient.from('tasks').insert([taskData]).select();
@@ -38,9 +34,7 @@ export const addTask = async (title: string, description: string = '', groupId: 
   return data;
 };
 
-/**
- * ✅ Get tasks (Solo or Group mode)
- */
+
 export const getTasks = async (groupId: string | null = null) => {
   const { data: user, error: userError } = await supabaseClient.auth.getUser();
   if (userError || !user.user) {
@@ -51,9 +45,9 @@ export const getTasks = async (groupId: string | null = null) => {
   let query = supabaseClient.from('tasks').select('*');
 
   if (groupId) {
-    query = query.eq('group_id', groupId); // Group mode
+    query = query.eq('group_id', groupId); 
   } else {
-    query = query.eq('user', user.user.id); // Solo mode
+    query = query.eq('user', user.user.id); 
   }
 
   const { data, error } = await query;
@@ -66,22 +60,17 @@ export const getTasks = async (groupId: string | null = null) => {
   return data;
 };
 
-/**
- * ✅ Create a new group
- */
+
 export const createGroup = async (groupName: string, inviteCode: string) => {
   try {
     const { data: user, error: userError } = await supabaseClient.auth.getUser();
     if (userError || !user.user) {
-      console.error("❌ Error fetching user:", userError?.message);
+      console.error(" Error fetching user:", userError?.message);
       return null;
     }
 
     console.log("Creating group with name:", groupName, "and invite code:", inviteCode);
 
-    // First, add the invite_code column if it doesn't exist
-    // Note: This is a one-time operation you should run manually in Supabase SQL editor
-    // await supabaseClient.rpc('add_invite_code_column_if_not_exists');
 
     const { data, error } = await supabaseClient
       .from("groups")
@@ -94,11 +83,10 @@ export const createGroup = async (groupName: string, inviteCode: string) => {
       .single();
 
     if (error) {
-      console.error("❌ Error creating group:", error.message);
+      console.error("Error creating group:", error.message);
       return null;
     }
 
-    // Automatically add the creator to the group
     if (data) {
       const { error: memberError } = await supabaseClient
         .from('group_members')
@@ -106,7 +94,7 @@ export const createGroup = async (groupName: string, inviteCode: string) => {
         
       if (memberError) {
         console.error("❌ Error adding creator to group:", memberError.message);
-        // We won't return null here as the group was still created
+
       }
     }
 
@@ -118,9 +106,7 @@ export const createGroup = async (groupName: string, inviteCode: string) => {
   }
 };
 
-/**
- * ✅ Join a group by ID or invite code
- */
+
 export const joinGroup = async (idOrCode: string) => {
   try {
     const { data: user, error: userError } = await supabaseClient.auth.getUser();
@@ -129,7 +115,7 @@ export const joinGroup = async (idOrCode: string) => {
       return false;
     }
 
-    // Try to find the group by ID or invite code
+
     const { data: group, error: groupError } = await supabaseClient
       .from('groups')
       .select('id')
@@ -141,7 +127,7 @@ export const joinGroup = async (idOrCode: string) => {
       return false;
     }
 
-    // Check if the user is already a member
+
     const { data: existingMember, error: memberCheckError } = await supabaseClient
       .from('group_members')
       .select('id')
@@ -154,7 +140,7 @@ export const joinGroup = async (idOrCode: string) => {
       return true;
     }
 
-    // Add user to the group
+
     const { error: joinError } = await supabaseClient
       .from('group_members')
       .insert([{ user_id: user.user.id, group_id: group.id }]);
@@ -171,9 +157,7 @@ export const joinGroup = async (idOrCode: string) => {
   }
 };
 
-/**
- * ✅ Get groups the user is part of
- */
+
 export const getUserGroups = async () => {
   const { data: user, error: userError } = await supabaseClient.auth.getUser();
   if (userError || !user.user) {
@@ -183,7 +167,7 @@ export const getUserGroups = async () => {
 
   const { data, error } = await supabaseClient
     .from('group_members')
-    .select('group_id, groups!inner(id, name, invite_code)') // Include invite_code
+    .select('group_id, groups!inner(id, name, invite_code)') 
     .eq('user_id', user.user.id);
 
   if (error) {
@@ -194,9 +178,6 @@ export const getUserGroups = async () => {
   return data;
 };
 
-/**
- * ✅ Add a new group task
- */
 export const addGroupTask = async (title: string, description: string, groupId: string) => {
   const { data: { user } } = await supabaseClient.auth.getUser();
 
@@ -212,8 +193,8 @@ export const addGroupTask = async (title: string, description: string, groupId: 
         title,
         description,
         completed: false,
-        group_id: groupId,  // ✅ Ensures task is linked to the group
-        user: user.id,       // ✅ Links task to the user
+        group_id: groupId, 
+        user: user.id,       
         created_at: new Date(),
       },
     ]);
@@ -224,9 +205,6 @@ export const addGroupTask = async (title: string, description: string, groupId: 
 };
 
 
-/**
- * ✅ Get tasks for a specific group with user information
- */
 export const getGroupTasks = async (groupId: string) => {
   const { data, error } = await supabaseClient
     .from('tasks')
@@ -242,9 +220,7 @@ export const getGroupTasks = async (groupId: string) => {
   }
   return data;
 };
-/**
- * ✅ Mark task as completed
- */
+
 export const markTaskAsCompleted = async (taskId: string) => {
   const { error } = await supabaseClient
     .from("tasks")
@@ -257,9 +233,7 @@ export const markTaskAsCompleted = async (taskId: string) => {
 };
 
 
-/**
- * ✅ Delete completed tasks (Solo or Group)
- */
+
 export const deleteCompletedTasks = async (groupId: string | null = null) => {
   const { data: user, error: userError } = await supabaseClient.auth.getUser();
   if (userError || !user.user) {

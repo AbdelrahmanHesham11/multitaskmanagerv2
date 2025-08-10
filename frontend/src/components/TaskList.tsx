@@ -11,7 +11,7 @@ interface TaskListProps {
 }
 
 export default function TaskList({ tasks, onTaskComplete, refreshTasks }: TaskListProps) {
-  // Separate tasks into incomplete and completed
+
   const incompleteTasks = tasks.filter((task) => !task.completed);
   const completedTasks = tasks.filter((task) => task.completed);
 
